@@ -155,5 +155,3 @@ func SwimmingSpentCalories(lengthPool, countPool int, duration, weight float64) 
 	var swimcalor = ((swimmingMeanSpeed(lengthPool, countPool, duration) + float64(swimmingCaloriesMeanSpeedShift)) * float64(swimmingCaloriesWeightMultiplier) * weight * duration)
 	return swimcalor
 }
-
-//
