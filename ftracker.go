@@ -85,7 +85,7 @@ func RunningSpentCalories(action int, weight, duration float64) float64 {
 	if duration == 0 {
 		return 0
 	}
-	runcalor = (float64(runningCaloriesMeanSpeedMultiplier) * (meanSpeed(action, duration)) * float64(runningCaloriesMeanSpeedShift) * weight * duration)
+	runcalor = (float64(runningCaloriesMeanSpeedMultiplier) * (meanSpeed(action, duration)) * float64(runningCaloriesMeanSpeedShift) * (weight / mInKm) * duration * minInH)
 	return runcalor
 }
 
@@ -109,7 +109,7 @@ func WalkingSpentCalories(action int, duration, weight, height float64) float64 
 	if duration == 0 {
 		return 0
 	}
-	walkcalor = ((walkingCaloriesWeightMultiplier*weight + (((meanSpeed(action, duration)*kmhInMsec)*(meanSpeed(action, duration)*kmhInMsec))/height)*walkingSpeedHeightMultiplier*weight) * duration * minInH)
+	walkcalor = ((walkingCaloriesWeightMultiplier*weight + (((meanSpeed(action, duration)*kmhInMsec)*(meanSpeed(action, duration)*kmhInMsec))/(height/cmInM))*walkingSpeedHeightMultiplier*weight) * duration * minInH)
 	return walkcalor
 }
 
