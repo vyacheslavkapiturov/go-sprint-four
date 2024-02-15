@@ -2,6 +2,7 @@ package ftracker
 
 import (
 	"fmt"
+	"math"
 )
 
 // Основные константы, необходимые для расчетов.
@@ -57,7 +58,7 @@ func ShowTrainingInfo(action int, trainingType string, duration, weight, height 
 		calories := WalkingSpentCalories(action, duration, weight, height) // вызовите здесь необходимую функцию
 		return fmt.Sprintf("Тип тренировки: %s\nДлительность: %.2f ч.\nДистанция: %.2f км.\nСкорость: %.2f км/ч\nСожгли калорий: %.2f\n", trainingType, duration, distance, speed, calories)
 	case trainingType == "Плавание":
-		distance := lengthPool * countPool                                         // вызовите здесь необходимую функцию
+		distance := distance(action)                                               // вызовите здесь необходимую функцию
 		speed := swimmingMeanSpeed(lengthPool, countPool, duration)                // вызовите здесь необходимую функцию
 		calories := SwimmingSpentCalories(lengthPool, countPool, duration, weight) // вызовите здесь необходимую функцию
 		return fmt.Sprintf("Тип тренировки: %s\nДлительность: %.2f ч.\nДистанция: %.2f км.\nСкорость: %.2f км/ч\nСожгли калорий: %.2f\n", trainingType, duration, float64(distance), speed, calories)
@@ -85,7 +86,7 @@ func RunningSpentCalories(action int, weight, duration float64) float64 {
 	if duration == 0 {
 		return 0
 	}
-	runcalor = (float64(runningCaloriesMeanSpeedMultiplier) * (meanSpeed(action, duration)) * float64(runningCaloriesMeanSpeedShift) * (weight / mInKm) * duration * minInH)
+	runcalor = (float64(runningCaloriesMeanSpeedMultiplier) * (meanSpeed(action, duration)) * float64(runningCaloriesMeanSpeedShift) * weight / mInKm * duration * minInH)
 	return runcalor
 }
 
@@ -109,7 +110,7 @@ func WalkingSpentCalories(action int, duration, weight, height float64) float64 
 	if duration == 0 {
 		return 0
 	}
-	walkcalor = ((walkingCaloriesWeightMultiplier*weight + (((meanSpeed(action, duration)*kmhInMsec)*(meanSpeed(action, duration)*kmhInMsec))/(height/cmInM))*walkingSpeedHeightMultiplier*weight) * duration * minInH)
+	walkcalor = ((walkingCaloriesWeightMultiplier*weight + (math.Pow((meanSpeed(action, duration)*kmhInMsec), 2)/(height/cmInM))*walkingSpeedHeightMultiplier*weight) * duration * minInH)
 	return walkcalor
 }
 
@@ -133,11 +134,9 @@ func swimmingMeanSpeed(lengthPool, countPool int, duration float64) float64 {
 	return float64(lengthPool) * float64(countPool) / mInKm / duration
 }
 
-//func swimmingdistance(lengthPool int, countPool int) {
-
-//return lengthPool * countPool
-//}
-
+// func swimmingdistance(lengthPool int, countPool int) {
+// return lengthPool * countPool
+// }
 // SwimmingSpentCalories возвращает количество потраченных калорий при плавании.
 //
 // Параметры:
@@ -155,3 +154,5 @@ func SwimmingSpentCalories(lengthPool, countPool int, duration, weight float64) 
 	var swimcalor = ((swimmingMeanSpeed(lengthPool, countPool, duration) + float64(swimmingCaloriesMeanSpeedShift)) * float64(swimmingCaloriesWeightMultiplier) * weight * duration)
 	return swimcalor
 }
+
+//
